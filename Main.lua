@@ -46,7 +46,7 @@ G2L["Title_6"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Title_6"].TextColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Title_6"].BackgroundTransparency = 1
 G2L["Title_6"].Size = UDim2.new(0.33831, 0, 0.10909, 0)
-G2L["Title_6"].Text = "Project Meteorite (scanner)"
+G2L["Title_6"].Text = "Project Lolz"
 G2L["Title_6"].Name = "Title"
 
 G2L["ScrollingFrame_7"] = Instance.new("ScrollingFrame", G2L["Frame_2"])
