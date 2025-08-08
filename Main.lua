@@ -22,6 +22,8 @@ G2L["Frame_2"].BorderSizePixel = 0
 G2L["Frame_2"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Frame_2"].Size = UDim2.new(0.31406, 0, 0.2965, 0)
 G2L["Frame_2"].Position = UDim2.new(0.27344, 0, 0.15364, 0)
+G2L["Frame_2"].Active = true
+G2L["Frame_2"].Draggable = true
 
 G2L["ImageLabel_3"] = Instance.new("ImageLabel", G2L["Frame_2"])
 G2L["ImageLabel_3"].BorderSizePixel = 0
@@ -138,26 +140,28 @@ task.spawn(C_f)
 local function C_11()
 	local Status = G2L["Status_12"]
 	local injected = G2L["Injected?_13"]
+	local found = false
 
-	local remotes = {}
 	for _, obj in ipairs(game:GetDescendants()) do
-		if obj:IsA("RemoteEvent") then
-			table.insert(remotes, obj)
+		if obj:IsA("RemoteEvent") and obj.Name:lower():find("vulnerability") then
+			local success = pcall(function()
+				obj:FireServer("print('test')")
+			end)
+			if success then
+				Vulnerability = obj
+				Status.Text = "Injected!"
+				Status.TextColor3 = Color3.fromRGB(0, 255, 0)
+				injected.Value = true
+				found = true
+				break
+			end
 		end
 	end
 
-	for _, remote in ipairs(remotes) do
-		local success = pcall(function()
-			remote:FireServer('print("Hi")')
-		end)
-
-		if success then
-			Vulnerability = remote
-			Status.Text = "Injected!"
-			Status.TextColor3 = Color3.fromRGB(0, 255, 0)
-			injected.Value = true
-			break
-		end
+	if not found then
+		Status.Text = "Not Injected!"
+		Status.TextColor3 = Color3.fromRGB(255, 0, 0)
+		injected.Value = false
 	end
 end
 G2L["Inject_10"].MouseButton1Click:Connect(C_11)
