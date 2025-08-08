@@ -143,7 +143,7 @@ local function C_11()
 	local found = false
 
 	for _, obj in ipairs(game:GetDescendants()) do
-		if obj:IsA("RemoteEvent") and obj.Name:lower():find("vulnerability") then
+		if obj:IsA("RemoteEvent") then
 			local success = pcall(function()
 				obj:FireServer("print('test')")
 			end)
@@ -153,6 +153,7 @@ local function C_11()
 				Status.TextColor3 = Color3.fromRGB(0, 255, 0)
 				injected.Value = true
 				found = true
+				warn("[Project Lolz]: Remote hooked:", obj:GetFullName())
 				break
 			end
 		end
@@ -162,6 +163,7 @@ local function C_11()
 		Status.Text = "Not Injected!"
 		Status.TextColor3 = Color3.fromRGB(255, 0, 0)
 		injected.Value = false
+		warn("[Project Lolz]: No remote found")
 	end
 end
 G2L["Inject_10"].MouseButton1Click:Connect(C_11)
