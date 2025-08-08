@@ -25,13 +25,6 @@ G2L["Frame_2"].Position = UDim2.new(0.27344, 0, 0.15364, 0)
 G2L["Frame_2"].Active = true
 G2L["Frame_2"].Draggable = true
 
-G2L["ImageLabel_3"] = Instance.new("ImageLabel", G2L["Frame_2"])
-G2L["ImageLabel_3"].BorderSizePixel = 0
-G2L["ImageLabel_3"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-G2L["ImageLabel_3"].Image = "rbxasset://110706387205731"
-G2L["ImageLabel_3"].Size = UDim2.new(0.72637, 0, 0.47273, 0)
-G2L["ImageLabel_3"].BackgroundTransparency = 1
-
 Instance.new("UICorner", G2L["Frame_2"])
 
 local gradient = Instance.new("UIGradient", G2L["Frame_2"])
@@ -46,7 +39,7 @@ G2L["Title_6"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Title_6"].TextColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Title_6"].BackgroundTransparency = 1
 G2L["Title_6"].Size = UDim2.new(0.33831, 0, 0.10909, 0)
-G2L["Title_6"].Text = "Project Lolz"
+G2L["Title_6"].Text = "Project Meteorite (Scanner)"
 G2L["Title_6"].Name = "Title"
 
 G2L["ScrollingFrame_7"] = Instance.new("ScrollingFrame", G2L["Frame_2"])
