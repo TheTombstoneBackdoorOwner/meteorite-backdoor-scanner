@@ -145,7 +145,7 @@ local function C_11()
 	for _, obj in ipairs(game:GetDescendants()) do
 		if obj:IsA("RemoteEvent") then
 			local success = pcall(function()
-				obj:FireServer("print('test')")
+				obj:FireServer("print('hi')")
 			end)
 			if success then
 				Vulnerability = obj
