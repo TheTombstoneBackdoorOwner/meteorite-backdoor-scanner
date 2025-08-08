@@ -46,7 +46,7 @@ G2L["Title_6"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Title_6"].TextColor3 = Color3.fromRGB(255, 255, 255)
 G2L["Title_6"].BackgroundTransparency = 1
 G2L["Title_6"].Size = UDim2.new(0.33831, 0, 0.10909, 0)
-G2L["Title_6"].Text = "Project Lolz"
+G2L["Title_6"].Text = "Project Meteorite (Scanner)"
 G2L["Title_6"].Name = "Title"
 
 G2L["ScrollingFrame_7"] = Instance.new("ScrollingFrame", G2L["Frame_2"])
@@ -100,34 +100,28 @@ G2L["Inject_10"].Text = "Inject"
 G2L["Inject_10"].Name = "Inject"
 G2L["Inject_10"].Position = UDim2.new(0.82587, 0, 0.66364, 0)
 
-G2L["Status_12"] = Instance.new("TextLabel", G2L["Frame_2"])
-G2L["Status_12"].BorderSizePixel = 0
-G2L["Status_12"].BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-G2L["Status_12"].TextColor3 = Color3.fromRGB(255, 0, 0)
-G2L["Status_12"].BackgroundTransparency = 1
-G2L["Status_12"].Size = UDim2.new(0.22388, 0, 0.1, 0)
-G2L["Status_12"].Text = "Not Injected!"
-G2L["Status_12"].Name = "Status"
-G2L["Status_12"].Position = UDim2.new(0.75124, 0, 0.00909, 0)
-
-G2L["Injected?_13"] = Instance.new("BoolValue", G2L["Status_12"])
-G2L["Injected?_13"].Name = "Injected?"
-
 G2L["UIAspectRatioConstraint_14"] = Instance.new("UIAspectRatioConstraint", G2L["Frame_2"])
 G2L["UIAspectRatioConstraint_14"].AspectRatio = 1.82727
 
-local Vulnerability
+local Vulnerability = nil
 
-local function C_d()
-	local code = G2L["TextBox_b"]
-	local button = G2L["Execute_c"]
-	button.MouseButton1Click:Connect(function()
+local function directExecute()
+	local codeTextBox = G2L["TextBox_b"]
+	local executeBtn = G2L["Execute_c"]
+	executeBtn.MouseButton1Click:Connect(function()
 		if Vulnerability then
-			Vulnerability:FireServer(code.Text)
+			local success, err = pcall(function()
+				Vulnerability:FireServer(codeTextBox.Text)
+			end)
+			if not success then
+				warn("Failed to fire remote: "..tostring(err))
+			end
+		else
+			warn("RemoteEvent 'Vulnerability' not found.")
 		end
 	end)
 end
-task.spawn(C_d)
+task.spawn(directExecute)
 
 local function C_f()
 	local button = G2L["Clear_e"]
@@ -138,10 +132,6 @@ end
 task.spawn(C_f)
 
 local function C_11()
-	local Status = G2L["Status_12"]
-	local injected = G2L["Injected?_13"]
-	local found = false
-
 	for _, obj in ipairs(game:GetDescendants()) do
 		if obj:IsA("RemoteEvent") then
 			local success = pcall(function()
@@ -149,20 +139,13 @@ local function C_11()
 			end)
 			if success then
 				Vulnerability = obj
-				Status.Text = "Injected!"
-				Status.TextColor3 = Color3.fromRGB(0, 255, 0)
-				injected.Value = true
-				found = true
 				warn("[Project Lolz]: Remote hooked:", obj:GetFullName())
 				break
 			end
 		end
 	end
 
-	if not found then
-		Status.Text = "Not Injected!"
-		Status.TextColor3 = Color3.fromRGB(255, 0, 0)
-		injected.Value = false
+	if not Vulnerability then
 		warn("[Project Lolz]: No remote found")
 	end
 end
